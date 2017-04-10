@@ -46,6 +46,24 @@ move(
     ).
 
 %Helpers
+
+printBoards([]).
+printBoards([B|Bs]):-printBoard(B), printBoards(Bs).
+
+printBoard(bd(X11,X12,X13,X21,X22,X23,X31,X32,X33)):-
+    format(
+        "~n|~t~a~t~4||~t~a~t~4+|~t~a~t~4+|~n",
+        [X11,X12,X13]
+    ),
+    format(
+        "|~t~a~t~4||~t~a~t~4+|~t~a~t~4+|~n",
+        [X21,X22,X23]
+    ),
+    format(
+        "|~t~a~t~4||~t~a~t~4+|~t~a~t~4+|~n",
+        [X31,X32,X33]
+    ).
+
 quicksort([],[]).
 quicksort([X|Xs],Ys) :-
     partition(Xs,X,Left,Right),
@@ -92,32 +110,13 @@ solveGame(BG):-
 addPath([], _,Y, Y).
 addPath([[V, BD]|Xs], H,Y, R):- addPath(Xs, H, [[V, BD,H]|Y], R).
 
-solver([[8,bd(1,2,3,4,5,6,7,8,b), Path]|VBDs], _):- write(Path).
+solver([[8,bd(1,2,3,4,5,6,7,8,b), Path]|VBDs], _):-printBoards(Path).
 solver([[Value, BD, Path]|VBDs], KnownBD):-
-    write(Value),
-    write(BD),
-    write(Path),
-    nl(),
     findall(Y,(move(1,BD,Y), not(member(Y, KnownBD))), Moves),
-    write(Moves),
-    nl(),
     append(Moves, KnownBD, KnownBDNew),
-    write(KnownBDNew),
-    nl(),
     createValuedBoardList(Moves,[], ValuedMoves),
-    write(ValuedMoves),
-    nl(),
     append([BD], Path, NewPath),
-    write(NewPath),
-    nl(),
     addPath(ValuedMoves, NewPath,[], ValuedMovesPath),
-    write(ValuedMovesPath),
-    nl(),
     append(VBDs, ValuedMovesPath, VBDsNew),
-    write(VBDsNew),
-    nl(),
     quicksort(VBDsNew, SortedValuedMoves),
-    write("SortedValuedMoves"),
-    write(SortedValuedMoves),
-    nl(),
     solver(SortedValuedMoves, KnownBDNew).
