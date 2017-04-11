@@ -1,5 +1,5 @@
 
-%Data
+%Facts
 man(jakob).
 man(holger).
 man(fabian).

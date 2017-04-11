@@ -20,20 +20,15 @@ bfs_([Cpos|Open], Goal, Seen):-
     write(Cpos),
     findall(
         X,
-        (write(X), con(Cpos, X), not(member(X, Seen))),
+        (con(Cpos, X), not(member(X, Seen))),
         Y
     ),
-    write(Y),
-    merge(Open, Y, OpenN),
+    append(Open, Y, OpenN),
     bfs_(OpenN, Goal,[Cpos|Seen]).
 
-enqueue(E,[],[E]).
-enqueue(E,Q,[Q|E]).
-
-merge([], R, R) .
-merge([H|T], R1, [H|R2]) :-
-    merge(T, R1, R2).
+append([], R, R) .
+append([H|T], R1, [H|R2]) :-
+    append(T, R1, R2).
 
 main(Argv):-
     bfsHelper(a,i).
-

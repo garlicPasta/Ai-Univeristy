@@ -110,12 +110,14 @@ solveGame(BG):-
 addPath([], _,Y, Y).
 addPath([[V, BD]|Xs], H,Y, R):- addPath(Xs, H, [[V, BD,H]|Y], R).
 
-solver([[8,bd(1,2,3,4,5,6,7,8,b), Path]|VBDs], _):-printBoards(Path).
+solver([[8,bd(1,2,3,4,5,6,7,8,b), Path]|VBDs], _):-
+    append(Path, [bd(1,2,3,4,5,6,7,8,b)], FinalPath),
+    printBoards(FinalPath).
 solver([[Value, BD, Path]|VBDs], KnownBD):-
     findall(Y,(move(1,BD,Y), not(member(Y, KnownBD))), Moves),
     append(Moves, KnownBD, KnownBDNew),
     createValuedBoardList(Moves,[], ValuedMoves),
-    append([BD], Path, NewPath),
+    append(Path, [BD], NewPath),
     addPath(ValuedMoves, NewPath,[], ValuedMovesPath),
     append(VBDs, ValuedMovesPath, VBDsNew),
     quicksort(VBDsNew, SortedValuedMoves),
